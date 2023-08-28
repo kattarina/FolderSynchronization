@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FolderSynchronisationApp": {
+      "commandName": "Project",
+      "commandLineArgs": "SourceFolderPath=C:\\Users\\eka_t\\source\\repos\\FolderSynchronisationApp\\FolderSynchronisationApp\\SourceFolder\r\nReplicaFolderPath=C:\\Users\\eka_t\\source\\repos\\FolderSynchronisationApp\\FolderSynchronisationApp\\ReplicaFolder\r\nLogFolderPath=C:\\Users\\eka_t\\source\\repos\\FolderSynchronisationApp\\FolderSynchronisationApp\\FolderSynchronisationAppLogs\r\nSyncInterval=180000"
+    }
+  }
+}
