@@ -228,7 +228,7 @@ namespace FolderSynchronisationApp
                     return false; // Files are of different sizes
                 }
 
-                int bufferSize = 64;
+                int bufferSize = 64*1024;
                 byte[] buffer1 = new byte[bufferSize];
                 byte[] buffer2 = new byte[bufferSize];
 
