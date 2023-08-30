@@ -12,16 +12,16 @@ namespace FolderSynchronisationApp
         private readonly ILogger<Worker> _logger; 
         public IServiceProvider Provider { get; set; }
 
-        public IFolderSynchronizer _serviceRepository { get; set; }
+        public IFolderSynchronizer _folderSynchronizer { get; set; }
         private readonly SettingConfig _settingConfig;
 
 
-        public Worker(IServiceProvider provider, ILogger<Worker> logger, IOptions<SettingConfig> settingConfig, IFolderSynchronizer serviceRepository)
+        public Worker(IServiceProvider provider, ILogger<Worker> logger, IOptions<SettingConfig> settingConfig, IFolderSynchronizer folder)
         {
             Provider = provider;
             _logger = logger;
-             
-            _serviceRepository =  Provider.GetService<IFolderSynchronizer>();
+
+            _folderSynchronizer =  Provider.GetService<IFolderSynchronizer>();
             _settingConfig = settingConfig.Value;
         }
 
@@ -41,7 +41,7 @@ namespace FolderSynchronisationApp
                     Environment.Exit(0);
                 }
 
-                Task t = _serviceRepository.DoWork();
+                Task t = _folderSynchronizer.DoWork();
 
 
                 await Task.Delay(syncInterval, stoppingToken);

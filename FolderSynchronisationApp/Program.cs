@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using System.Reflection.PortableExecutable;
+
+
 
 var builder = WebApplication.CreateBuilder(args);// Add services to the container.c
 builder.Configuration.AddCommandLine(args);
@@ -13,20 +16,28 @@ if (args == null || Array.Exists(args, arg => arg == null))
 { 
     Console.WriteLine($"One or more arguments are NULL, shutting down the application.");
     Environment.Exit(0);
-} 
+}
 
-string LogFolderPath = builder.Configuration["LogFolderPath"]; 
-Console.WriteLine($"LogFolderPath: {LogFolderPath}");
+if (Directory.Exists(builder.Configuration["SourceFolderPath"]))
+{
+    Console.WriteLine($"The folder '{builder.Configuration["SourceFolderPath"]}' exists in the system.");
+
+    if (Directory.Exists(builder.Configuration["ReplicaFolderPath"]))
+    {
+        Console.WriteLine($"The folder '{builder.Configuration["ReplicaFolderPath"]}' exists in the system."); 
+    }
+}
+
+else
+{
+    Console.WriteLine($"The directory provided for folder comparison, does not  exists in the system.");
+    Environment.Exit(0);
+}
 
 
-
-
-var dir = LogFolderPath;
- 
-DirectoryInfo di = Directory.CreateDirectory(dir);
+DirectoryInfo di = Directory.CreateDirectory(builder.Configuration["LogFolderPath"]);
 string fileName = "AppDebugLog.txt";
 var docPath = Path.Combine(di.FullName, fileName);
-
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -55,3 +66,4 @@ var app = builder.Build();// Configure the HTTP request pipeline.
 app.Run();
 
  
+    

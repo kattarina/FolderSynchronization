@@ -49,23 +49,15 @@ namespace FolderSynchronisationApp
                 string sourceFolderName = GetFolderName(_settingConfig.SourceFolderPath);
                 string replicaFolderName = GetFolderName(_settingConfig.ReplicaFolderPath);
 
-                // Check if the folder exists
-                if (Directory.Exists(_settingConfig.SourceFolderPath))
-                {
-                    Log.Logger.Information($"The folder '{sourceFolderName}' exists in the solution directory.");
-                }
-                else
-                {
-                    Log.Logger.Information($"The folder '{sourceFolderName}' does not exist in the solution directory.");
+                // Check if the folder still exists
+                if (!Directory.Exists(_settingConfig.SourceFolderPath))
+                { 
+                    Log.Logger.Information($"The folder '{sourceFolderName}' does not exist in the system");
                 }
 
-                if (Directory.Exists(_settingConfig.ReplicaFolderPath))
-                {
-                    Log.Logger.Information($"The folder '{replicaFolderName}' exists in the solution directory.");
-                }
-                else
-                {
-                    Log.Logger.Information($"The folder '{replicaFolderName}' does not exist in the solution directory.");
+                if (!Directory.Exists(_settingConfig.ReplicaFolderPath))
+                {                    
+                    Log.Logger.Information($"The folder '{replicaFolderName}' does not exist in the system");
                 }
 
                 SyncFolders(_settingConfig.SourceFolderPath, _settingConfig.ReplicaFolderPath);
