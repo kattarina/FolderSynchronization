@@ -52,12 +52,16 @@ namespace FolderSynchronisationApp
                 // Check if the folder still exists
                 if (!Directory.Exists(_settingConfig.SourceFolderPath))
                 { 
-                    Log.Logger.Information($"The folder '{sourceFolderName}' does not exist in the system");
+                    Log.Logger.Information($"The folder '{sourceFolderName}' does not exist in the system"); 
+                    DirectoryInfo di = Directory.CreateDirectory(_settingConfig.SourceFolderPath);
+                    Log.Logger.Information($"The folder '{sourceFolderName}' is created  in the system");
                 }
 
                 if (!Directory.Exists(_settingConfig.ReplicaFolderPath))
                 {                    
                     Log.Logger.Information($"The folder '{replicaFolderName}' does not exist in the system");
+                    DirectoryInfo di = Directory.CreateDirectory(_settingConfig.replicaFolderName);
+                    Log.Logger.Information($"The folder '{replicaFolderName}' is created  in the system");
                 }
 
                 SyncFolders(_settingConfig.SourceFolderPath, _settingConfig.ReplicaFolderPath);
@@ -178,9 +182,7 @@ namespace FolderSynchronisationApp
                     Log.Logger.Information($"file log: {DateTime.Now.ToString()} - Deleted: , {fullPathToDelete} ");
                 }
             } 
-
         }
-
 
         static string GetFolderName(string fullPath)
         {

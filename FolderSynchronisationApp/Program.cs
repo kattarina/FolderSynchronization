@@ -30,8 +30,7 @@ if (Directory.Exists(builder.Configuration["SourceFolderPath"]))
 
 else
 {
-    Console.WriteLine($"The directory provided for folder comparison, does not  exists in the system.");
-    Environment.Exit(0);
+    Console.WriteLine($"The directory provided for folder comparison, does not  exists in the system. The directory will be created!"); 
 }
 
 
