@@ -13,7 +13,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace FolderSynchronisationApp
 {
-    internal class FolderSynchronizer : IFolderSynchronizer
+    public class FolderSynchronizer : IFolderSynchronizer
     {
 
         public IHostApplicationLifetime _lifeTime;
@@ -94,7 +94,7 @@ namespace FolderSynchronisationApp
                 string logMessage = string.Concat(DateTime.Now.ToString(), " - ");
                 try
                 {
-                    if (!File.Exists(replicaFile))
+                    if (!FileExists(replicaFile))
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(replicaFile));
                         File.Copy(sourceFile, replicaFile);
@@ -151,10 +151,7 @@ namespace FolderSynchronisationApp
                 {
                     logMessage = string.Concat(logMessage, "No differences found!");
                 }
-
-               
-
-
+                 
                 Log.Logger.Information($"file log:  {logMessage}");
             }
 
@@ -220,10 +217,10 @@ namespace FolderSynchronisationApp
             return folderName;
         }
 
-        static  bool CompareFiles(string sourcePath, string replicaPath)
+        static bool CompareFiles(string sourceFilePath, string replicaFilePath)
         {
-            using (FileStream fs1 = File.OpenRead(sourcePath))
-            using (FileStream fs2 = File.OpenRead(replicaPath))
+            using (FileStream fs1 = File.OpenRead(sourceFilePath))
+            using (FileStream fs2 = File.OpenRead(replicaFilePath))
             {
                 long fileSize = fs1.Length;
                 if (fileSize != fs2.Length)
@@ -266,6 +263,18 @@ namespace FolderSynchronisationApp
                 }
             }
             return true;
+        }
+
+
+        public bool CompareFilesTest(string sourceFilePath, string replicaFilePath)
+        {
+            return CompareFiles(sourceFilePath, replicaFilePath);
+        }
+
+
+        public bool FileExists(string fileName)
+        {
+            return File.Exists(fileName);
         }
     }
 
