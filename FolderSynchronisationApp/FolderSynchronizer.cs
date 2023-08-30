@@ -60,7 +60,7 @@ namespace FolderSynchronisationApp
                 if (!Directory.Exists(_settingConfig.ReplicaFolderPath))
                 {                    
                     Log.Logger.Information($"The folder '{replicaFolderName}' does not exist in the system");
-                    DirectoryInfo di = Directory.CreateDirectory(_settingConfig.replicaFolderName);
+                    DirectoryInfo di = Directory.CreateDirectory(_settingConfig.ReplicaFolderPath);
                     Log.Logger.Information($"The folder '{replicaFolderName}' is created  in the system");
                 }
 

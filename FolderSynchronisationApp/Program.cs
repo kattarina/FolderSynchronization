@@ -17,14 +17,14 @@ if (args == null || Array.Exists(args, arg => arg == null))
     Console.WriteLine($"One or more arguments are NULL, shutting down the application.");
     Environment.Exit(0);
 }
-
-if (Directory.Exists(builder.Configuration["SourceFolderPath"]))
+ 
+if (Directory.Exists(builder.Configuration["SourceFolderPath"])) 
 {
-    Console.WriteLine($"The folder '{builder.Configuration["SourceFolderPath"]}' exists in the system.");
+   // Console.WriteLine($"The folder '{sourceFolderPath}' exists in the system.");
 
     if (Directory.Exists(builder.Configuration["ReplicaFolderPath"]))
     {
-        Console.WriteLine($"The folder '{builder.Configuration["ReplicaFolderPath"]}' exists in the system."); 
+       // Console.WriteLine($"The folder '{builder.Configuration["ReplicaFolderPath"]}' exists in the system."); 
     }
 }
 
