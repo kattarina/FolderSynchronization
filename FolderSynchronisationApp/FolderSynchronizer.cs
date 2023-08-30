@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FolderSynchronisationApp
 {
@@ -75,9 +76,9 @@ namespace FolderSynchronisationApp
         private void SyncFolders(string sourcePath, string replicaPath)
         {
             string[] sourceFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
-            string[] replicaFiles = Directory.GetFiles(replicaPath, "*", SearchOption.AllDirectories);   
-              
-             
+            string[] replicaFiles = Directory.GetFiles(replicaPath, "*", SearchOption.AllDirectories);
+
+
             //check if there are any extra files in replica, which are not in source
             if (replicaFiles.Length > 0)
             {
@@ -102,22 +103,32 @@ namespace FolderSynchronisationApp
                     }
                     else
                     {
-                        using (var sourceStream = File.OpenRead(sourceFile))
-                        using (var replicaStream = File.OpenRead(replicaFile))
-                        {
-                            using (var sourceMd5 = MD5.Create())
-                            using (var replicaMd5 = MD5.Create())
-                            {
-                                byte[] sourceHash = sourceMd5.ComputeHash(sourceStream);
-                                byte[] replicaHash = replicaMd5.ComputeHash(replicaStream);
 
-                                if (!StructuralComparisons.StructuralEqualityComparer.Equals(sourceHash, replicaHash))
-                                {
-                                    File.Copy(sourceFile, replicaFile, true);
-                                    logMessage = string.Concat(logMessage, "Updated: ", sourceFile, " -> ", replicaFile);
-                                }
-                            }
+                        bool filesAreEqual = CompareFiles(sourceFile, replicaFile);
+
+                        if (!filesAreEqual)
+                        {
+                            File.Copy(sourceFile, replicaFile, true);
+                            logMessage = string.Concat(logMessage, "Copied: ", sourceFile, " -> ", replicaFile);
                         }
+
+
+                        //using (var sourceStream = File.OpenRead(sourceFile))
+                        //using (var replicaStream = File.OpenRead(replicaFile))
+                        //{
+                        //    using (var sourceMd5 = MD5.Create())
+                        //    using (var replicaMd5 = MD5.Create())
+                        //    {
+                        //        byte[] sourceHash = sourceMd5.ComputeHash(sourceStream);
+                        //        byte[] replicaHash = replicaMd5.ComputeHash(replicaStream);
+
+                        //        if (!StructuralComparisons.StructuralEqualityComparer.Equals(sourceHash, replicaHash))
+                        //        {
+                        //            File.Copy(sourceFile, replicaFile, true);
+                        //            logMessage = string.Concat(logMessage, "Updated: ", sourceFile, " -> ", replicaFile);
+                        //        }
+                        //    }
+                        //}
                     }
 
                 }
@@ -126,10 +137,18 @@ namespace FolderSynchronisationApp
                     logMessage = String.Concat(logMessage, "Error: ", ex.Message);
                 }
 
-                // Append log
+                // Append log 
+
+                string textAfterHyphen = logMessage.Substring(logMessage.LastIndexOf("-") + (logMessage.Length - logMessage.LastIndexOf("-"))).Trim();
+                if (string.IsNullOrWhiteSpace(textAfterHyphen))
+                {
+                    logMessage = string.Concat(logMessage, "No difference found!");
+                }
+
+
                 Log.Logger.Information($"file log:  {logMessage}");
             }
-             
+
         }
 
 
@@ -192,5 +211,54 @@ namespace FolderSynchronisationApp
             return folderName;
         }
 
+        static  bool CompareFiles(string sourcePath, string replicaPath)
+        {
+            using (FileStream fs1 = File.OpenRead(sourcePath))
+            using (FileStream fs2 = File.OpenRead(replicaPath))
+            {
+                long fileSize = fs1.Length;
+                if (fileSize != fs2.Length)
+                {
+                    return false; // Files are of different sizes
+                }
+
+                int bufferSize = 64;
+                byte[] buffer1 = new byte[bufferSize];
+                byte[] buffer2 = new byte[bufferSize];
+
+                bool filesAreEqual = true;
+                long bytesRemaining = fileSize;
+
+                while (bytesRemaining > 0)
+                {
+                    int bytesRead1 =   fs1.Read(buffer1, 0, bufferSize);
+                    int bytesRead2 =   fs2.Read(buffer2, 0, bufferSize);
+
+                    if (bytesRead1 != bytesRead2 || !BuffersEqual(buffer1, buffer2, bytesRead1))
+                    {
+                        filesAreEqual = false;
+                        break;
+                    }
+
+                    bytesRemaining -= bytesRead1;
+                }
+
+                return filesAreEqual;
+            }
+        }
+
+        static bool BuffersEqual(byte[] buffer1, byte[] buffer2, int length)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                if (buffer1[i] != buffer2[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
+
+
 }
