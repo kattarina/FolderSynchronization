@@ -37,7 +37,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.Configure<SettingConfig>(builder.Configuration);
  
-builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IFolderSynchronizer, FolderSynchronizer>();
 builder.Services.AddHostedService<Worker>();
  
 

@@ -12,16 +12,16 @@ namespace FolderSynchronisationApp
         private readonly ILogger<Worker> _logger; 
         public IServiceProvider Provider { get; set; }
 
-        public IServiceRepository _serviceRepository { get; set; }
+        public IFolderSynchronizer _serviceRepository { get; set; }
         private readonly SettingConfig _settingConfig;
 
 
-        public Worker(IServiceProvider provider, ILogger<Worker> logger, IOptions<SettingConfig> settingConfig, IServiceRepository serviceRepository)
+        public Worker(IServiceProvider provider, ILogger<Worker> logger, IOptions<SettingConfig> settingConfig, IFolderSynchronizer serviceRepository)
         {
             Provider = provider;
             _logger = logger;
              
-            _serviceRepository =  Provider.GetService<IServiceRepository>();
+            _serviceRepository =  Provider.GetService<IFolderSynchronizer>();
             _settingConfig = settingConfig.Value;
         }
 
