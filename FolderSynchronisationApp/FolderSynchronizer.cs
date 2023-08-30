@@ -137,13 +137,22 @@ namespace FolderSynchronisationApp
                     logMessage = String.Concat(logMessage, "Error: ", ex.Message);
                 }
 
-                // Append log 
+                // Append log  
+                 
 
-                string textAfterHyphen = logMessage.Substring(logMessage.LastIndexOf("-") + (logMessage.Length - logMessage.LastIndexOf("-"))).Trim();
-                if (string.IsNullOrWhiteSpace(textAfterHyphen))
+                if (logMessage.LastIndexOf("-") != -1 && logMessage.LastIndexOf("-") + 1 < logMessage.Length)
                 {
-                    logMessage = string.Concat(logMessage, "No difference found!");
+                    if (string.IsNullOrWhiteSpace(logMessage.Substring(logMessage.LastIndexOf("-") + 1)))
+                    {
+                        logMessage = string.Concat(logMessage, "No difference found!");
+                    }
                 }
+                else
+                {
+                    logMessage = string.Concat(logMessage, "No differences found!");
+                }
+
+               
 
 
                 Log.Logger.Information($"file log:  {logMessage}");
