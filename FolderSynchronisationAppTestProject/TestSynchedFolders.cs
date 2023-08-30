@@ -15,17 +15,12 @@ namespace FolderSynchronisationAppTestProject
             // Arrange
             var lifeTimeMock = new Mock<IHostApplicationLifetime>();
             var settingConfigMock = new Mock<IOptions<SettingConfig>>();
-             
-
-            // Adjust the number of "../" to match your solution's folder structure
-            string solutionDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../.."));
-
 
             // Construct the full file paths 
 
-            string sourceFilePath = Path.Combine(solutionDirectory,   "TestFilesRepo", "TestSourceFolder", "TestFile1.txt");
-            string replicaFilePath = Path.Combine(solutionDirectory,  "TestFilesRepo", "TestReplicaFolder", "TestFile1.txt");  
-             
+            string sourceFilePath = GetBaseSourcePath("TestFile1.txt");
+            string replicaFilePath = GetBaseReplicaPath("TestFile1.txt");
+
 
             IFolderSynchronizer folderSynchronizer = new FolderSynchronizer(lifeTimeMock.Object, settingConfigMock.Object);
 
@@ -45,28 +40,40 @@ namespace FolderSynchronisationAppTestProject
             var lifeTimeMock = new Mock<IHostApplicationLifetime>();
             var settingConfigMock = new Mock<IOptions<SettingConfig>>();
 
-
-            // Adjust the number of "../" to match your solution's folder structure
-            string solutionDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../.."));
-
-
             // Construct the full file paths 
 
-            string sourceFilePath = Path.Combine(solutionDirectory, "TestFilesRepo", "TestSourceFolder", "TestFile2.txt");
-            string replicaFilePath = Path.Combine(solutionDirectory, "TestFilesRepo", "TestReplicaFolder", "TestFile2.txt");
+            string sourceFilePath = GetBaseSourcePath("TestFile2.txt");
+            string replicaFilePath = GetBaseReplicaPath("TestFile2.txt");
 
 
             IFolderSynchronizer folderSynchronizer = new FolderSynchronizer(lifeTimeMock.Object, settingConfigMock.Object);
 
             // Act
             var result = folderSynchronizer.CompareFilesTest(sourceFilePath, replicaFilePath);
-
-
             // Assert
             Assert.IsFalse(result); // Check that the result is true 
 
         }
-         
 
+
+        string GetBaseSourcePath(string filename)
+        {
+            // Adjust the number of "../" to match your solution's folder structure
+            string solutionDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../.."));
+            string sourceFilePath = Path.Combine(solutionDirectory, "TestFilesRepo", "TestSourceFolder", filename);
+
+            return sourceFilePath;
+        }
+
+
+        string GetBaseReplicaPath(string filename)
+        {
+            // Adjust the number of "../" to match your solution's folder structure
+            string solutionDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../.."));
+            string sourceFilePath = Path.Combine(solutionDirectory, "TestFilesRepo", "TestReplicaFolder", filename);
+
+            return sourceFilePath;
+
+        }
     }
 }
