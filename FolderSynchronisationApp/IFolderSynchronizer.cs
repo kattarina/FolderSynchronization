@@ -13,5 +13,12 @@ namespace FolderSynchronisationApp
         bool CompareFilesTest(string sourceFilePath, string replicaFilePath);
 
         bool FileExists(string fileName);
+
+        void FileCopy(string sourceFilePath, string replicaFilePath);
+        void FileDelete(string FilePath);
+
+        bool DirectoryExists(string directoryName);
+
+        void CreateDirectory(string DirectoryName);
     }
 }
